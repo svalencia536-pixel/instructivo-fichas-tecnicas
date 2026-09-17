@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Recorrido narrado para las cocinas del Grupo la Independiente: buscar una receta, registrar la produccion del dia y leer el resumen del mes.">
+<meta name="theme-color" content="#1a7a4d">
+<title>Fichas técnicas en cocina</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --papel:#eef1ee; --tarjeta:#ffffff; --tinta:#1b2420; --tinta-suave:#5a6560;
+    --linea:#d7dcd8; --linea-fina:#e8ebe9;
+    --verde:#1a7a4d; --verde-oscuro:#146040; --verde-claro:#e6f2ec;
+    --azul:#2f6fb5; --azul-claro:#e7eff8; --ambar:#b26206; --ambar-claro:#fbf0df;
+    --sombra:0 1px 2px rgba(27,36,32,.06), 0 8px 24px rgba(27,36,32,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --papel:#151a18; --tarjeta:#1e2523; --tinta:#e8ece9; --tinta-suave:#9daaa4;
+      --linea:#333d39; --linea-fina:#28302d;
+      --verde:#4fb488; --verde-oscuro:#79cba6; --verde-claro:#1c3830;
+      --azul:#7fb0e4; --azul-claro:#1b2c3d; --ambar:#e3a85a; --ambar-claro:#3a2c16;
+      --sombra:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+    }
+  }
+  :root[data-theme="dark"]{
+    --papel:#151a18; --tarjeta:#1e2523; --tinta:#e8ece9; --tinta-suave:#9daaa4;
+    --linea:#333d39; --linea-fina:#28302d;
+    --verde:#4fb488; --verde-oscuro:#79cba6; --verde-claro:#1c3830;
+    --azul:#7fb0e4; --azul-claro:#1b2c3d; --ambar:#e3a85a; --ambar-claro:#3a2c16;
+    --sombra:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+  }
+
+  body{
+    background:var(--papel); color:var(--tinta);
+    font-family:"IBM Plex Sans", system-ui, -apple-system, Segoe UI, sans-serif;
+    font-size:16px; line-height:1.5;
+  }
+  .envoltura{max-width:980px; margin:0 auto; padding-inline:16px; padding-block:28px 56px;}
+  h1,h2,h3{font-family:"Archivo", system-ui, sans-serif; text-wrap:balance; margin:0;}
+  h1{font-size:clamp(26px,5vw,38px); font-weight:700; letter-spacing:-.015em;}
+  h2{font-size:20px; font-weight:600;}
+  .rotulo{font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--tinta-suave);
+    font-weight:600;}
+  .cabecera{display:flex; flex-wrap:wrap; gap:6px 18px; align-items:baseline; margin-bottom:6px;}
+  .entradilla{color:var(--tinta-suave); max-width:62ch; margin:10px 0 0;}
+
+  /* ---------------- reproductor ---------------- */
+  .reproductor{margin-top:26px; background:var(--tarjeta); border:1px solid var(--linea);
+    border-radius:10px; box-shadow:var(--sombra); overflow:hidden;}
+  .barra-progreso{height:4px; background:var(--linea-fina);}
+  .barra-progreso div{height:100%; width:0; background:var(--verde); transition:width .4s linear;}
+
+  .escenario{position:relative; background:var(--papel); border-bottom:1px solid var(--linea-fina);
+    overflow:hidden;}
+  .lienzo{width:880px; transform-origin:top left;}
+  .sello{position:absolute; right:10px; top:8px; z-index:3; font-size:10px; letter-spacing:.07em;
+    text-transform:uppercase; color:var(--tinta-suave); background:var(--tarjeta);
+    border:1px solid var(--linea); border-radius:99px; padding:2px 9px;}
+
+  .pie{padding:18px 20px 6px; min-height:96px;}
+  .pie p{margin:0; font-size:clamp(17px,2.4vw,21px); line-height:1.45; max-width:60ch;}
+  .capitulo-actual{margin-bottom:6px;}
+
+  .mandos{display:flex; flex-wrap:wrap; gap:10px; align-items:center; padding:12px 20px 18px;}
+  button{font:inherit; color:inherit; cursor:pointer;}
+  .boton{background:var(--tarjeta); border:1px solid var(--linea); border-radius:7px;
+    padding:8px 14px; font-size:14px; font-weight:500; display:inline-flex; align-items:center; gap:7px;}
+  .boton:hover{border-color:var(--tinta-suave);}
+  .boton.primario{background:var(--verde); border-color:var(--verde); color:#fff; font-weight:600;}
+  .boton.primario:hover{background:var(--verde-oscuro); border-color:var(--verde-oscuro);}
+  .boton[aria-pressed="true"]{background:var(--verde-claro); border-color:var(--verde);}
+  .contador{margin-left:auto; font-family:"IBM Plex Mono", monospace; font-size:13px;
+    color:var(--tinta-suave); font-variant-numeric:tabular-nums;}
+  :focus-visible{outline:2px solid var(--verde); outline-offset:2px;}
+
+  .capitulos{display:flex; flex-wrap:wrap; gap:8px; padding:0 20px 18px;}
+  .capitulos button{background:none; border:none; border-top:2px solid var(--linea);
+    padding:8px 2px 0; flex:1 1 120px; text-align:left; min-width:110px;}
+  .capitulos button span{display:block; font-size:13px; font-weight:600;}
+  .capitulos button small{color:var(--tinta-suave); font-size:11.5px;}
+  .capitulos button[aria-current="true"]{border-top-color:var(--verde); color:var(--verde-oscuro);}
+
+  /* ---------------- pantallas simuladas ---------------- */
+  .p{background:#fff; color:#20282a; font-size:12.5px; line-height:1.4; padding:14px 16px 20px;
+    min-height:440px;}
+  .p *{box-sizing:border-box;}
+  .p .fila{display:flex; gap:10px;}
+  .p .grupo{display:flex; gap:6px; flex-wrap:wrap; align-items:center;}
+  .p .caja{background:#fff; border:1px solid #e2e6e5; border-radius:7px; padding:10px 12px;}
+  .p .campo{border:1px solid #d5dad9; border-radius:7px; padding:8px 10px; color:#8d9895;
+    background:#fff;}
+  .p .mini{font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:#8d9895;
+    font-weight:600;}
+  .p .bt{border:1px solid #d5dad9; border-radius:6px; padding:5px 10px; font-size:11.5px;
+    background:#fff; color:#39433f;}
+  .p .bt.verde{background:var(--verde); border-color:var(--verde); color:#fff; font-weight:600;}
+  .p .cifra{font-family:"IBM Plex Mono", monospace; font-variant-numeric:tabular-nums;}
+
+  .p-encabezado{display:flex; justify-content:space-between; align-items:flex-start; gap:12px;
+    border-bottom:1px solid #e2e6e5; padding-bottom:9px;}
+  .p-marca{font-family:"Archivo",sans-serif; font-weight:700; font-size:14px;}
+  .p-marca small{display:block; font-size:9px; letter-spacing:.1em; color:#8d9895; font-weight:600;}
+  .p-sello-fecha{background:var(--verde-claro); color:var(--verde-oscuro); border:1px solid #bfe0cf;
+    border-radius:99px; padding:3px 10px; font-size:10.5px; font-weight:600; white-space:nowrap;}
+  .p-cuenta{font-size:10.5px; color:#8d9895; text-align:right;}
+
+  .p-cols{display:grid; grid-template-columns:270px 1fr; gap:14px; margin-top:12px;}
+  .p-chip{border:1px solid #e2e6e5; border-radius:99px; padding:3px 9px; font-size:10.5px;
+    display:inline-flex; gap:5px; align-items:center;}
+  .p-chip i{width:7px; height:7px; border-radius:2px; display:block;}
+  .p-lista{border:1px solid #e2e6e5; border-radius:7px; margin-top:8px; overflow:hidden;}
+  .p-lista div{padding:7px 10px; border-bottom:1px solid #eef1f0; font-size:11.5px; font-weight:500;}
+  .p-lista div:last-child{border-bottom:none;}
+  .p-lista div small{display:block; font-weight:400; color:#8d9895; font-size:10px;}
+  .p-lista div.sel{background:var(--verde-claro);}
+
+  .p-guia{border:1px solid #e2e6e5; border-radius:8px; padding:16px 18px;}
+  .p-guia h4{font-family:"Archivo",sans-serif; font-size:17px; margin:0 0 6px; font-weight:600;}
+  .p-guia ol{margin:10px 0 0; padding-left:18px;}
+  .p-guia li{margin-bottom:4px;}
+
+  .p-ficha-tit{font-family:"Archivo",sans-serif; font-size:26px; font-weight:700; margin:2px 0 0;}
+  .p-meta{display:flex; gap:22px; flex-wrap:wrap; margin-top:12px;}
+  .p-meta div small{display:block;}
+  .p-meta b{font-size:14px;}
+  .p-tabla{width:100%; border-collapse:collapse; margin-top:8px; font-size:11.5px;}
+  .p-tabla th{text-align:left; font-size:9.5px; letter-spacing:.07em; text-transform:uppercase;
+    color:#8d9895; border-bottom:1px solid #e2e6e5; padding:6px 8px; font-weight:600;}
+  .p-tabla td{padding:7px 8px; border-bottom:1px solid #eef1f0;}
+  .p-tabla td:last-child, .p-tabla th:last-child{text-align:right;}
+  .p-sub{background:var(--azul-claro); color:var(--azul); border-radius:4px; padding:1px 5px;
+    font-size:9px; letter-spacing:.06em; font-weight:700; margin-left:6px;}
+
+  .p-tabs{display:flex; gap:6px; align-items:center;}
+  .p-tabs .bt{flex:1; text-align:center;}
+  .p-tabs .bt.act{background:#f2f5f4; font-weight:600; color:#20282a;}
+  .p-tejas{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:12px;}
+  .p-teja b{font-family:"Archivo",sans-serif; font-size:22px; display:block; line-height:1.1;}
+  .p-teja span{font-size:11px; font-weight:600;}
+  .p-teja small{display:block; color:#8d9895; font-size:10px;}
+  .p-cal{display:grid; grid-template-columns:repeat(7,1fr); gap:3px; margin-top:8px;}
+  .p-cal div{aspect-ratio:1.5; border-radius:3px; background:#f4f6f5; font-size:9.5px;
+    padding:3px 4px; color:#98a3a0;}
+  .p-cal div b{display:block; font-size:11px; color:#20282a;}
+  .p-cal .c1{background:#d6e6f5;} .p-cal .c2{background:#a9ccec;} .p-cal .c3{background:#6ea8da;}
+  .p-barra{height:6px; border-radius:3px; background:var(--azul); display:block; margin-top:4px;}
+  .p-desvio{height:8px; border-radius:2px; background:var(--ambar); display:block;}
+
+  /* foco del paso */
+  .apagado .zona{opacity:.32; transition:opacity .35s;}
+  .zona{transition:opacity .35s, box-shadow .35s;}
+  .zona.foco{opacity:1; box-shadow:0 0 0 2px var(--verde), 0 0 0 6px rgba(26,122,77,.16);
+    border-radius:6px;}
+  @media (prefers-reduced-motion: reduce){ .zona, .barra-progreso div{transition:none;} }
+
+  /* ---------------- transcripción ---------------- */
+  .escrito{margin-top:40px;}
+  .escrito ol{list-style:none; padding:0; margin:18px 0 0; display:grid; gap:2px;}
+  .escrito li{display:grid; grid-template-columns:34px 1fr; gap:12px; padding:11px 2px;
+    border-bottom:1px solid var(--linea-fina); align-items:baseline;}
+  .escrito li span{font-family:"IBM Plex Mono",monospace; color:var(--tinta-suave); font-size:13px;}
+  .escrito li p{margin:0;}
+  .escrito li.cab{grid-template-columns:1fr; border-bottom:none; padding:20px 0 2px;}
+  .cierre{margin-top:34px; border-top:1px solid var(--linea); padding-top:18px;
+    color:var(--tinta-suave); font-size:14px; display:grid; gap:8px; max-width:70ch;}
+  .cierre b{color:var(--tinta);}
+
+  @media (max-width:640px){
+    .pie{min-height:120px;}
+    .contador{margin-left:0; width:100%;}
+  }
+</style>
+<style>
+  /* Lo mismo que pone la plataforma de artefactos, para que la pagina se vea
+     igual servida por su cuenta. */
+  :root{color-scheme:light dark;
+    padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);}
+  body{margin:0;}
+  img{max-width:100%;}
+  [hidden]{display:none!important;}
+</style>
+</head>
+<body>
+<div class="envoltura">
+  <div class="cabecera">
+    <h1>Fichas técnicas en cocina</h1>
+    <p class="rotulo">Restaurantes del Grupo la Independiente</p>
+  </div>
+  <p class="entradilla">
+    Recorrido narrado, de principio a fin: buscar una receta, preparar con las cantidades que da la
+    página, registrar la producción del día y leer el resumen del mes. Sirve para los restaurantes
+    del grupo: cada uno entra por su propio enlace y ve sus propias recetas, pero la página se maneja
+    igual en todos. Dale al botón y el recorrido avanza solo, con voz y subtítulos.
+  </p>
+
+  <div class="reproductor">
+    <div class="barra-progreso"><div id="progreso"></div></div>
+
+    <div class="escenario" id="escenario">
+      <span class="sello">Pantallas de ejemplo</span>
+      <div class="lienzo" id="lienzo">
+
+        <!-- ENTRAR -->
+        <div class="p" id="m-entrar" hidden>
+          <div style="max-width:360px; margin:60px auto 0;">
+            <div class="caja" style="padding:20px 22px;">
+              <div class="p-marca" style="margin-bottom:18px;">Fichas técnicas
+                <small>Tu restaurante · Grupo la Independiente</small></div>
+              <div class="zona" id="z-usuario" style="margin-bottom:12px;">
+                <div class="mini" style="margin-bottom:4px;">Usuario</div>
+                <div class="campo">cocina</div>
+              </div>
+              <div class="zona" id="z-clave" style="margin-bottom:16px;">
+                <div class="mini" style="margin-bottom:4px;">Contraseña</div>
+                <div class="campo">••••••••</div>
+              </div>
+              <div class="bt verde" style="text-align:center; padding:9px;">Entrar</div>
+              <p style="font-size:10.5px; color:#8d9895; margin:12px 0 0;">
+                El usuario no distingue mayúsculas; la contraseña sí. Si no la tienes, pídesela al
+                área de costos.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- BUSCAR -->
+        <div class="p" id="m-buscar" hidden>
+          <div class="p-encabezado">
+            <div class="p-marca">Fichas técnicas de cocina y bar
+              <small>Tu restaurante · Grupo la Independiente</small></div>
+            <div class="grupo">
+              <span class="bt">Ver en celular</span>
+              <span class="bt zona" id="z-bt-registrar">Registrar producción</span>
+              <span class="bt">Tema oscuro</span>
+              <span class="bt">Salir · COCINA</span>
+            </div>
+          </div>
+          <div class="p-cuenta" style="margin-top:7px;">
+            760 recetas · 0 con método
+            <span class="p-sello-fecha zona" id="z-fecha" style="margin-left:8px;">datos del 9 de
+              septiembre del 2026, 12:23 a. m.</span>
+          </div>
+          <div class="p-cols">
+            <div>
+              <div class="zona" id="z-buscador">
+                <div class="campo">Escribe el nombre de la receta…</div>
+                <div class="campo" style="margin-top:6px;">O escógela de la lista</div>
+              </div>
+              <div class="zona" id="z-filtros" style="margin-top:10px;">
+                <div class="grupo">
+                  <span class="p-chip"><i style="background:#e0574c"></i>Alimentos 47</span>
+                  <span class="p-chip"><i style="background:#2f6fb5"></i>Bebidas 439</span>
+                  <span class="p-chip"><i style="background:#1a7a4d"></i>Subrecetas 133</span>
+                  <span class="p-chip"><i style="background:#b26206"></i>Adicionales 35</span>
+                  <span class="p-chip"><i style="background:#6b4fa8"></i>Eventos y menús 66</span>
+                </div>
+              </div>
+              <div class="zona" id="z-lista">
+                <div class="mini" style="margin:12px 0 0;">Recetas <span class="cifra">760</span></div>
+                <div class="p-lista">
+                  <div class="sel">CEVICHE CLÁSICO DE LA CASA<small>010123 · Alimentos</small></div>
+                  <div>ALITAS DE POLLO X PORCIÓN<small>S001039 · Subrecetas</small></div>
+                  <div>LECHE DE TIGRE<small>S014020 · Subrecetas</small></div>
+                  <div>MOJITO CLÁSICO<small>011045 · Bebidas</small></div>
+                  <div>APANADO CHICKEN TENDER<small>S027020 · Subrecetas</small></div>
+                </div>
+              </div>
+            </div>
+            <div class="p-guia zona" id="z-guia">
+              <h4>Busca la receta y aquí sale la ficha completa</h4>
+              <p style="color:#5a6560; margin:0;">Ingredientes con su cantidad, la conversión a
+                gramos, el método de preparación, los utensilios y el menaje. Todo sale del libro de
+                recetas de tu restaurante.</p>
+              <ol>
+                <li><b>Escribe el nombre</b> en la caja de arriba: sirve con una palabra suelta.</li>
+                <li>O <b>abre la de la lista</b> y marca las que quieras comparar.</li>
+                <li>Ajusta <b>cuántas recetas vas a preparar</b> y las cantidades se multiplican solas.</li>
+                <li>Si un ingrediente está marcado <b>SUBRECETA</b>, tócalo y se abre su propia ficha.</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <!-- FICHA -->
+        <div class="p" id="m-ficha" hidden>
+          <div class="p-encabezado">
+            <div class="p-marca">Fichas técnicas de cocina y bar
+              <small>Tu restaurante · Grupo la Independiente</small></div>
+            <div class="grupo">
+              <span class="bt">← Fichas</span>
+              <span class="bt">Registrar producción</span>
+            </div>
+          </div>
+          <div class="fila" style="margin-top:12px; gap:16px;">
+            <div style="flex:1;">
+              <div class="zona" id="z-titulo">
+                <div class="mini" style="color:var(--azul);">Receta</div>
+                <h3 class="p-ficha-tit">CEVICHE CLÁSICO DE LA CASA</h3>
+              </div>
+              <div class="p-meta zona" id="z-meta">
+                <div><span class="mini">Código</span><b class="cifra">010123</b></div>
+                <div><span class="mini">Rendimiento</span><b class="cifra">1,0 PORCIÓN</b></div>
+                <div><span class="mini">Ingredientes</span><b class="cifra">4</b></div>
+                <div><span class="mini">Grupo</span><b>Alimentos</b></div>
+              </div>
+              <div class="grupo zona" id="z-cantidad" style="margin-top:14px;">
+                <span class="mini" style="margin-right:4px;">Cantidad a preparar</span>
+                <span class="bt">−</span><span class="bt cifra" style="min-width:34px; text-align:center;">1</span>
+                <span class="bt">+</span>
+                <span class="bt verde">×1</span><span class="bt">×2</span><span class="bt">×5</span>
+                <span class="bt">×10</span><span class="bt">×20</span>
+                <span class="bt zona" id="z-compartir" style="margin-left:10px;">Compartir</span>
+                <span class="bt">Imprimir</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="zona" id="z-tabla">
+            <div class="mini" style="margin:16px 0 0;">Ingredientes · 4 líneas</div>
+            <table class="p-tabla">
+              <thead><tr><th>Ingrediente</th><th>Cantidad</th><th>Unidad</th><th>Gramos / ml</th></tr></thead>
+              <tbody>
+                <tr><td>PESCADO BLANCO</td><td class="cifra">180,0</td><td>GRM</td><td class="cifra">180</td></tr>
+                <tr><td>LECHE DE TIGRE <span class="p-sub">SUBRECETA</span></td>
+                    <td class="cifra">60,0</td><td>ML</td><td class="cifra">60</td></tr>
+                <tr><td>CEBOLLA MORADA</td><td class="cifra">30,0</td><td>GRM</td><td class="cifra">30</td></tr>
+                <tr><td>CILANTRO</td><td class="cifra">5,0</td><td>GRM</td><td class="cifra">5</td></tr>
+              </tbody>
+            </table>
+            <p style="font-size:10px; color:#8d9895; margin:6px 0 0;">
+              Lo sólido va en gramos y lo líquido en mililitros. Los artículos que se cuentan por
+              unidad se convierten con la presentación del propio nombre.</p>
+          </div>
+
+          <div class="zona" id="z-metodo" style="margin-top:14px;">
+            <div class="mini">Método de preparación</div>
+            <div class="caja" style="margin-top:6px; background:#fbfcfb;">
+              <b>Todavía no tiene método cargado.</b>
+              <p style="margin:4px 0 0; color:#5a6560;">Escríbelo en la hoja
+                <span class="cifra">METODOS DE PREPARACION</span> del libro de recetas y aparece aquí
+                en la próxima actualización.</p>
+            </div>
+            <div class="fila" style="margin-top:12px;">
+              <div style="flex:1;"><div class="mini">Utensilios</div>
+                <div style="color:#5a6560;">Bowl, cuchillo de filetear, balanza.</div></div>
+              <div style="flex:1;"><div class="mini">Menaje de servicio</div>
+                <div style="color:#5a6560;">Plato hondo, cuchara sopera, servilleta.</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- REGISTRAR -->
+        <div class="p" id="m-registro" hidden>
+          <div class="p-tabs zona" id="z-tabs">
+            <span class="bt">← Fichas</span>
+            <span class="bt act">Registrar</span>
+            <span class="bt">Resumen</span>
+            <span class="bt" style="color:#b0413a; flex:0 0 auto;">¿Quién reporta?</span>
+          </div>
+          <div class="zona" id="z-produjiste" style="margin-top:12px;">
+            <div class="campo">Escribe lo que produjiste…</div>
+          </div>
+          <div class="caja zona" id="z-quien" style="margin-top:10px; background:#fbfcfb;">
+            <div class="mini">Quién reporta</div>
+            <div class="fila" style="margin-top:6px;">
+              <div class="campo" style="flex:1;">Andrés Gómez</div>
+              <div class="campo cifra" style="width:150px; color:#20282a;">17/09/2026</div>
+            </div>
+          </div>
+
+          <div class="zona" id="z-filas" style="margin-top:10px;">
+            <div class="caja" style="padding:0; overflow:hidden;">
+              <table class="p-tabla" style="margin:0;">
+                <thead><tr><th style="padding-left:12px;">Subreceta</th><th>Recetas</th>
+                  <th>Esperado</th><th>Salió</th><th>Diferencia</th><th style="padding-right:12px;">Observaciones</th></tr></thead>
+                <tbody>
+                  <tr><td style="padding-left:12px;">LECHE DE TIGRE<br>
+                      <small style="color:#8d9895;">S014020 · ML</small></td>
+                    <td class="cifra">2</td><td class="cifra">2.000</td><td class="cifra">1.950</td>
+                    <td class="cifra" style="color:var(--ambar); font-weight:600;">−50</td>
+                    <td style="padding-right:12px; color:#5a6560;">se derramó un poco</td></tr>
+                  <tr><td style="padding-left:12px;">APANADO CHICKEN TENDER<br>
+                      <small style="color:#8d9895;">S027020 · GRM</small></td>
+                    <td class="cifra">1</td><td class="cifra">1.030</td><td class="cifra">1.030</td>
+                    <td class="cifra">0</td><td style="padding-right:12px;"></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="fila zona" id="z-enviar" style="margin-top:12px; align-items:center;">
+            <span style="color:#5a6560; flex:1;">2 subrecetas anotadas hoy</span>
+            <span class="bt verde" style="padding:9px 26px;">Enviar</span>
+          </div>
+          <p style="font-size:10.5px; color:#8d9895; margin:10px 0 0;">
+            Un solo envío al final del día, con todo junto. Si falla el internet sale
+            <b>Reintentar</b>: lo anotado queda guardado en el aparato.</p>
+        </div>
+
+        <!-- RESUMEN -->
+        <div class="p" id="m-resumen" hidden>
+          <div class="p-tabs">
+            <span class="bt">← Fichas</span><span class="bt">Registrar</span>
+            <span class="bt act">Resumen</span>
+          </div>
+          <div style="text-align:center; margin-top:12px;">
+            <b style="font-family:'Archivo',sans-serif; font-size:15px;">Septiembre 2026</b>
+            <div class="mini">13 producciones</div>
+          </div>
+          <div class="p-tejas zona" id="z-tejas">
+            <div class="caja p-teja"><b class="cifra">13</b><span>producciones</span>
+              <small>11 días con registro</small></div>
+            <div class="caja p-teja"><b class="cifra">7</b><span>subrecetas distintas</span>
+              <small>de 133 que tiene la carta</small></div>
+            <div class="caja p-teja"><b class="cifra">15</b><span>recetas hechas</span>
+              <small>sumando las tandas</small></div>
+            <div class="caja p-teja"><b class="cifra" style="color:var(--ambar);">7</b>
+              <span>salieron distinto</span><small>6 por debajo · 1 por encima</small></div>
+          </div>
+
+          <div class="zona" id="z-calendario" style="margin-top:14px;">
+            <div class="mini">Día por día</div>
+            <div class="p-cal">
+              <div>L</div><div>M</div><div>M</div><div>J</div><div>V</div><div>S</div><div>D</div>
+              <div>1</div><div class="c1"><b>2</b>1</div><div class="c1"><b>3</b>1</div><div>4</div>
+              <div class="c1"><b>5</b>1</div><div>6</div><div>7</div>
+              <div class="c1"><b>8</b>1</div><div class="c1"><b>9</b>1</div><div class="c1"><b>10</b>1</div>
+              <div class="c1"><b>11</b>1</div><div class="c1"><b>12</b>1</div><div>13</div><div>14</div>
+              <div class="c1"><b>15</b>1</div><div class="c2"><b>16</b>2</div><div class="c2"><b>17</b>2</div>
+              <div>18</div><div>19</div><div>20</div><div>21</div>
+            </div>
+            <div class="grupo" style="margin-top:6px;">
+              <span class="p-chip"><i style="background:#f4f6f5"></i>sin registro</span>
+              <span class="p-chip"><i style="background:#d6e6f5"></i>1 o 2</span>
+              <span class="p-chip"><i style="background:#a9ccec"></i>3 a 5</span>
+              <span class="p-chip"><i style="background:#6ea8da"></i>6 o más</span>
+            </div>
+          </div>
+
+          <div class="fila" style="margin-top:14px; gap:14px;">
+            <div class="zona" id="z-ranking" style="flex:1;">
+              <div class="mini">Lo que más se produce</div>
+              <div class="caja" style="margin-top:6px;">
+                <div style="display:flex; justify-content:space-between;">
+                  <span>ALMÍBAR DE AZÚCAR</span><span class="cifra">5 veces</span></div>
+                <span class="p-barra" style="width:100%;"></span>
+                <div style="display:flex; justify-content:space-between; margin-top:9px;">
+                  <span>ADEREZO DE SALSA CÉSAR</span><span class="cifra">2 veces</span></div>
+                <span class="p-barra" style="width:40%;"></span>
+                <div style="display:flex; justify-content:space-between; margin-top:9px;">
+                  <span>ALMÍBAR DE MARACUYÁ</span><span class="cifra">2 veces</span></div>
+                <span class="p-barra" style="width:40%;"></span>
+              </div>
+            </div>
+            <div class="zona" id="z-desvio" style="flex:1;">
+              <div class="mini">Lo que sale distinto a la ficha</div>
+              <div class="caja" style="margin-top:6px;">
+                <div style="display:flex; justify-content:space-between;">
+                  <span>CAMARONES APANADOS</span>
+                  <span class="cifra" style="color:var(--ambar);">−5 %</span></div>
+                <span class="p-desvio" style="width:38%;"></span>
+                <div style="display:flex; justify-content:space-between; margin-top:9px;">
+                  <span>ALMÍBAR DE JENGIBRE</span>
+                  <span class="cifra" style="color:var(--ambar);">−4 %</span></div>
+                <span class="p-desvio" style="width:30%;"></span>
+                <div style="display:flex; justify-content:space-between; margin-top:9px;">
+                  <span>ALMÍBAR DE AZÚCAR</span>
+                  <span class="cifra" style="color:var(--azul);">+3 %</span></div>
+                <span class="p-desvio" style="width:22%; background:var(--azul);"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="pie">
+      <p class="rotulo capitulo-actual" id="rotulo-capitulo">Empieza aquí</p>
+      <p id="subtitulo" aria-live="polite">Este recorrido dura unos cinco minutos y avanza solo.
+        Puedes pausarlo, repetir un paso o saltar a la parte que te interese.</p>
+    </div>
+
+    <div class="mandos">
+      <button class="boton primario" id="bt-play">▶ Empezar el recorrido</button>
+      <button class="boton" id="bt-atras" title="Paso anterior">‹ Atrás</button>
+      <button class="boton" id="bt-siguiente" title="Paso siguiente">Siguiente ›</button>
+      <button class="boton" id="bt-voz" aria-pressed="true" title="Activar o silenciar la voz">🔊 Voz</button>
+      <span class="contador" id="contador">paso 1 de 17</span>
+    </div>
+
+    <div class="capitulos" id="capitulos"></div>
+  </div>
+
+  <section class="escrito">
+    <h2>Todo el recorrido, escrito</h2>
+    <p class="entradilla">Para imprimirlo y dejarlo en la cocina, o para leerlo sin audio.</p>
+    <ol id="transcripcion"></ol>
+  </section>
+
+  <div class="cierre">
+    <p><b>Si la fecha de arriba se quedó atrás</b>, la página está mostrando recetas viejas: avisa al
+      área de costos antes de preparar.</p>
+    <p><b>Si el envío falla</b>, vuelve a darle a Reintentar. Lo que anotaste no se pierde: queda
+      guardado en el teléfono hasta que salga.</p>
+    <p><b>Los costos no se ven en cocina.</b> La página de la cocina no los trae, y eso es a
+      propósito.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  var PASOS = [
+    {c:0, m:"m-buscar", z:[], t:"Esta es la página de fichas técnicas de los restaurantes del Grupo la Independiente. Se abre en el celular, en la tableta o en el computador de la cocina, y no hay que instalar nada. Aquí están todas las recetas del libro, con sus ingredientes, su rendimiento y su método."},
+    {c:0, m:"m-entrar", z:["z-usuario","z-clave"], t:"Cada restaurante del grupo tiene su propio enlace y sus propias recetas, pero la página se maneja igual en todos. Lo primero es entrar: costos te da un usuario y una contraseña. El usuario no distingue mayúsculas; la contraseña sí. La clave es del restaurante: no se comparte por fuera del equipo."},
+    {c:1, m:"m-buscar", z:["z-buscador"], t:"Para buscar, escribe una palabra suelta: ceviche, fondo, almíbar. No tienes que escribir el nombre completo, ni con tildes."},
+    {c:1, m:"m-buscar", z:["z-filtros","z-lista"], t:"Si no recuerdas cómo se llama, tócala en la lista de abajo. Los botones de colores filtran por tipo: alimentos, bebidas, subrecetas, adicionales. En la lista aparecen las recetas de tu restaurante, no las de las otras marcas."},
+    {c:2, m:"m-ficha", z:["z-titulo","z-meta"], t:"Esta es la ficha. Arriba va el nombre, el código del sistema, el rendimiento, que es cuánto da la receta completa, y cuántos ingredientes lleva."},
+    {c:2, m:"m-ficha", z:["z-tabla"], t:"La tabla dice cuánto va de cada ingrediente. La última columna lo pasa a gramos o a mililitros, que es lo que de verdad vas a pesar o a medir."},
+    {c:2, m:"m-ficha", z:["z-cantidad"], t:"Si vas a preparar más de una, sube la cantidad con el más, o toca por dos, por cinco, por diez. Todas las cantidades se multiplican solas: no calcules nada a mano."},
+    {c:2, m:"m-ficha", z:["z-tabla"], t:"Cuando un ingrediente está marcado como subreceta, quiere decir que es otra receta de la casa. Tócalo y se abre su propia ficha, con su preparación completa."},
+    {c:2, m:"m-ficha", z:["z-metodo"], t:"Debajo van el método de preparación, los utensilios y el menaje. Si dice que todavía no tiene método, es porque no está escrito en el libro; se escribe en la hoja métodos de preparación y aparece aquí en la siguiente actualización."},
+    {c:2, m:"m-ficha", z:["z-compartir"], t:"Compartir arma un PDF de la ficha, para mandarlo por WhatsApp o imprimirlo y dejarlo en la línea."},
+    {c:3, m:"m-buscar", z:["z-bt-registrar"], t:"Ahora la parte que le sirve al área de costos: registrar lo que produjiste. Se entra por el botón Registrar producción."},
+    {c:3, m:"m-registro", z:["z-quien"], t:"Escribe tu nombre y revisa la fecha. La fecha sale puesta en el día de hoy; cámbiala solo si estás registrando algo de ayer."},
+    {c:3, m:"m-registro", z:["z-produjiste","z-filas"], t:"Escribe qué preparaste y cuántas recetas hiciste. La página calcula cuánto debería salir, según el rendimiento de la ficha."},
+    {c:3, m:"m-registro", z:["z-filas"], t:"Después anota cuánto salió de verdad. Si salió distinto, la página marca la diferencia en amarillo. Eso no es un regaño: es el dato que costos necesita para ajustar la receta o la porción. Si pasó algo, escríbelo en observaciones."},
+    {c:3, m:"m-registro", z:["z-enviar"], t:"Al final del día, un solo envío con todo junto. Si falla el internet sale Reintentar, y nada se pierde: lo que anotaste queda guardado en el teléfono."},
+    {c:4, m:"m-resumen", z:["z-tejas"], t:"En Resumen ves el mes completo: cuántas producciones se registraron, cuántas subrecetas distintas y cuántas salieron distinto a la ficha."},
+    {c:4, m:"m-resumen", z:["z-calendario"], t:"El calendario muestra los días con registro. Los días en blanco son días sin registrar, y ahí se ve de una si el equipo dejó de anotar."},
+    {c:4, m:"m-resumen", z:["z-ranking","z-desvio"], t:"Abajo, lo que más se produce y lo que sale distinto a la ficha. Si una subreceta siempre rinde menos de lo que promete, hay que revisar la receta o la porción."},
+    {c:4, m:"m-buscar", z:["z-fecha"], t:"Una última cosa, la más importante. El recuadro verde de arriba dice de qué día son los datos que estás viendo. Si esa fecha se quedó atrás, avisa al área de costos: la página está mostrando recetas viejas."},
+    {c:4, m:"m-buscar", z:[], t:"Eso es todo, y funciona igual en los seis restaurantes del grupo. Buscar la receta, preparar con las cantidades que da la página, registrar lo del día y revisar el resumen. Si algo no cuadra, avisa a costos antes de improvisar."}
+  ];
+  var CAPITULOS = [
+    {n:"Entrar", d:"usuario y clave"},
+    {n:"Buscar", d:"encontrar la receta"},
+    {n:"La ficha", d:"leerla y multiplicarla"},
+    {n:"Registrar", d:"la producción del día"},
+    {n:"El resumen", d:"cómo va el mes"}
+  ];
+
+  var $ = function(id){ return document.getElementById(id); };
+  var lienzo = $("lienzo"), escenario = $("escenario");
+  var subtitulo = $("subtitulo"), rotulo = $("rotulo-capitulo"), contador = $("contador");
+  var btPlay = $("bt-play"), btVoz = $("bt-voz");
+  var i = 0, corriendo = false, conVoz = true, reloj = null, vozEs = null;
+  // Cancelar una voz dispara su propio "onend": sin este contador, saltar de
+  // paso mientras habla adelantaria dos pasos de una vez.
+  var turno = 0;
+  var synth = window.speechSynthesis || null;
+
+  // ---- escalar la pantalla simulada al ancho disponible ----
+  function escalar(){
+    var activa = lienzo.querySelector(".p:not([hidden])");
+    if (!activa) return;
+    var k = Math.min(1, escenario.clientWidth / 880);
+    lienzo.style.transform = "scale(" + k + ")";
+    escenario.style.height = Math.round(activa.offsetHeight * k) + "px";
+  }
+  window.addEventListener("resize", escalar);
+
+  function pintar(){
+    var paso = PASOS[i];
+    var pantallas = lienzo.querySelectorAll(".p");
+    for (var n = 0; n < pantallas.length; n++){
+      pantallas[n].hidden = pantallas[n].id !== paso.m;
+    }
+    var zonas = lienzo.querySelectorAll(".zona");
+    for (var z = 0; z < zonas.length; z++){ zonas[z].classList.remove("foco"); }
+    var pantalla = $(paso.m);
+    pantalla.classList.toggle("apagado", paso.z.length > 0);
+    for (var f = 0; f < paso.z.length; f++){
+      var el = $(paso.z[f]);
+      if (el) el.classList.add("foco");
+    }
+    subtitulo.textContent = paso.t;
+    rotulo.textContent = CAPITULOS[paso.c].n + " · " + CAPITULOS[paso.c].d;
+    contador.textContent = "paso " + (i + 1) + " de " + PASOS.length;
+    $("progreso").style.width = ((i + 1) / PASOS.length * 100) + "%";
+    var botones = $("capitulos").querySelectorAll("button");
+    for (var b = 0; b < botones.length; b++){
+      botones[b].setAttribute("aria-current", b === paso.c ? "true" : "false");
+    }
+    escalar();
+  }
+
+  function buscarVoz(){
+    if (!synth) return null;
+    var voces = synth.getVoices() || [];
+    var orden = ["es-CO","es-MX","es-US","es-ES","es-AR","es"];
+    for (var o = 0; o < orden.length; o++){
+      for (var v = 0; v < voces.length; v++){
+        if (voces[v].lang && voces[v].lang.toLowerCase().indexOf(orden[o].toLowerCase()) === 0){
+          return voces[v];
+        }
+      }
+    }
+    return null;
+  }
+  if (synth){
+    vozEs = buscarVoz();
+    synth.onvoiceschanged = function(){ vozEs = buscarVoz(); };
+  }
+
+  function callar(){
+    turno++;
+    if (synth) { try { synth.cancel(); } catch(e){} }
+    if (reloj) { clearTimeout(reloj); reloj = null; }
+  }
+
+  function decir(){
+    callar();
+    var mio = turno;
+    var texto = PASOS[i].t;
+    var espera = Math.max(4000, texto.length * 68);
+    var hablo = false;
+    if (conVoz && synth){
+      try {
+        var u = new SpeechSynthesisUtterance(texto);
+        u.lang = vozEs && vozEs.lang ? vozEs.lang : "es-ES";
+        if (vozEs) u.voice = vozEs;
+        u.rate = 0.98; u.pitch = 1;
+        u.onend = function(){
+          if (corriendo && mio === turno) { reloj = setTimeout(avanzar, 500); }
+        };
+        synth.speak(u);
+        hablo = true;
+      } catch(e){ hablo = false; }
+    }
+    if (!hablo) { reloj = setTimeout(avanzar, espera); }
+  }
+
+  function avanzar(){
+    if (i + 1 >= PASOS.length){ terminar(); return; }
+    i++; pintar();
+    if (corriendo) decir();
+  }
+
+  function terminar(){
+    corriendo = false; callar();
+    btPlay.textContent = "▶ Ver otra vez";
+    btPlay.setAttribute("aria-pressed", "false");
+  }
+
+  function reproducir(){
+    corriendo = true;
+    btPlay.textContent = "❚❚ Pausar";
+    pintar(); decir();
+  }
+  function pausar(){
+    corriendo = false; callar();
+    btPlay.textContent = "▶ Continuar";
+  }
+
+  btPlay.addEventListener("click", function(){
+    if (corriendo) { pausar(); return; }
+    if (btPlay.textContent.indexOf("otra vez") > -1) i = 0;
+    reproducir();
+  });
+  $("bt-siguiente").addEventListener("click", function(){
+    callar();
+    if (i + 1 < PASOS.length) { i++; pintar(); if (corriendo) decir(); }
+  });
+  $("bt-atras").addEventListener("click", function(){
+    callar();
+    if (i > 0) { i--; pintar(); if (corriendo) decir(); }
+  });
+  btVoz.addEventListener("click", function(){
+    conVoz = !conVoz;
+    btVoz.setAttribute("aria-pressed", conVoz ? "true" : "false");
+    btVoz.textContent = conVoz ? "🔊 Voz" : "🔇 Sin voz";
+    if (corriendo) decir();
+  });
+
+  // ---- capítulos ----
+  var contenedor = $("capitulos");
+  CAPITULOS.forEach(function(cap, n){
+    var b = document.createElement("button");
+    b.innerHTML = "<span>" + cap.n + "</span><small>" + cap.d + "</small>";
+    b.addEventListener("click", function(){
+      callar();
+      for (var p = 0; p < PASOS.length; p++){
+        if (PASOS[p].c === n) { i = p; break; }
+      }
+      pintar();
+      if (corriendo) decir();
+    });
+    contenedor.appendChild(b);
+  });
+
+  // ---- transcripción ----
+  var lista = $("transcripcion"), capActual = -1;
+  PASOS.forEach(function(paso, n){
+    if (paso.c !== capActual){
+      capActual = paso.c;
+      var cab = document.createElement("li");
+      cab.className = "cab";
+      cab.innerHTML = "<p class=\"rotulo\">" + CAPITULOS[capActual].n + " · " +
+        CAPITULOS[capActual].d + "</p>";
+      lista.appendChild(cab);
+    }
+    var li = document.createElement("li");
+    li.innerHTML = "<span>" + (n + 1) + "</span><p></p>";
+    li.querySelector("p").textContent = paso.t;
+    lista.appendChild(li);
+  });
+
+  pintar();
+})();
+</script>
+</body>
+</html>
