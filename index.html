@@ -56,7 +56,7 @@
   .escenario{position:relative; background:var(--papel); border-bottom:1px solid var(--linea-fina);
     overflow:hidden;}
   .lienzo{width:880px; transform-origin:top left;}
-  .sello{position:absolute; right:10px; top:8px; z-index:3; font-size:10px; letter-spacing:.07em;
+  .sello{position:absolute; right:10px; bottom:8px; z-index:3; font-size:10px; letter-spacing:.07em;
     text-transform:uppercase; color:var(--tinta-suave); background:var(--tarjeta);
     border:1px solid var(--linea); border-radius:99px; padding:2px 9px;}
 
@@ -514,27 +514,28 @@
 (function(){
   var PASOS = [
     {c:0, m:"m-buscar", z:[], t:"Esta es la página de fichas técnicas de los restaurantes del Grupo la Independiente. Se abre en el celular, en la tableta o en el computador de la cocina, y no hay que instalar nada. Aquí están todas las recetas del libro, con sus ingredientes, su rendimiento y su método."},
-    {c:0, m:"m-entrar", z:["z-usuario","z-clave"], t:"Cada restaurante del grupo tiene su propio enlace y sus propias recetas, pero la página se maneja igual en todos. Lo primero es entrar: costos te da un usuario y una contraseña. El usuario no distingue mayúsculas; la contraseña sí. La clave es del restaurante: no se comparte por fuera del equipo."},
-    {c:1, m:"m-buscar", z:["z-buscador"], t:"Para buscar, escribe una palabra suelta: ceviche, fondo, almíbar. No tienes que escribir el nombre completo, ni con tildes."},
-    {c:1, m:"m-buscar", z:["z-filtros","z-lista"], t:"Si no recuerdas cómo se llama, tócala en la lista de abajo. Los botones de colores filtran por tipo: alimentos, bebidas, subrecetas, adicionales. En la lista aparecen las recetas de tu restaurante, no las de las otras marcas."},
-    {c:2, m:"m-ficha", z:["z-titulo","z-meta"], t:"Esta es la ficha. Arriba va el nombre, el código del sistema, el rendimiento, que es cuánto da la receta completa, y cuántos ingredientes lleva."},
-    {c:2, m:"m-ficha", z:["z-tabla"], t:"La tabla dice cuánto va de cada ingrediente. La última columna lo pasa a gramos o a mililitros, que es lo que de verdad vas a pesar o a medir."},
-    {c:2, m:"m-ficha", z:["z-cantidad"], t:"Si vas a preparar más de una, sube la cantidad con el más, o toca por dos, por cinco, por diez. Todas las cantidades se multiplican solas: no calcules nada a mano."},
-    {c:2, m:"m-ficha", z:["z-tabla"], t:"Cuando un ingrediente está marcado como subreceta, quiere decir que es otra receta de la casa. Tócalo y se abre su propia ficha, con su preparación completa."},
-    {c:2, m:"m-ficha", z:["z-metodo"], t:"Debajo van el método de preparación, los utensilios y el menaje. Si dice que todavía no tiene método, es porque no está escrito en el libro; se escribe en la hoja métodos de preparación y aparece aquí en la siguiente actualización."},
-    {c:2, m:"m-ficha", z:["z-compartir"], t:"Compartir arma un PDF de la ficha, para mandarlo por WhatsApp o imprimirlo y dejarlo en la línea."},
-    {c:3, m:"m-buscar", z:["z-bt-registrar"], t:"Ahora la parte que le sirve al área de costos: registrar lo que produjiste. Se entra por el botón Registrar producción."},
-    {c:3, m:"m-registro", z:["z-quien"], t:"Escribe tu nombre y revisa la fecha. La fecha sale puesta en el día de hoy; cámbiala solo si estás registrando algo de ayer."},
-    {c:3, m:"m-registro", z:["z-produjiste","z-filas"], t:"Escribe qué preparaste y cuántas recetas hiciste. La página calcula cuánto debería salir, según el rendimiento de la ficha."},
-    {c:3, m:"m-registro", z:["z-filas"], t:"Después anota cuánto salió de verdad. Si salió distinto, la página marca la diferencia en amarillo. Eso no es un regaño: es el dato que costos necesita para ajustar la receta o la porción. Si pasó algo, escríbelo en observaciones."},
-    {c:3, m:"m-registro", z:["z-enviar"], t:"Al final del día, un solo envío con todo junto. Si falla el internet sale Reintentar, y nada se pierde: lo que anotaste queda guardado en el teléfono."},
-    {c:4, m:"m-resumen", z:["z-tejas"], t:"En Resumen ves el mes completo: cuántas producciones se registraron, cuántas subrecetas distintas y cuántas salieron distinto a la ficha."},
-    {c:4, m:"m-resumen", z:["z-calendario"], t:"El calendario muestra los días con registro. Los días en blanco son días sin registrar, y ahí se ve de una si el equipo dejó de anotar."},
-    {c:4, m:"m-resumen", z:["z-ranking","z-desvio"], t:"Abajo, lo que más se produce y lo que sale distinto a la ficha. Si una subreceta siempre rinde menos de lo que promete, hay que revisar la receta o la porción."},
-    {c:4, m:"m-buscar", z:["z-fecha"], t:"Una última cosa, la más importante. El recuadro verde de arriba dice de qué día son los datos que estás viendo. Si esa fecha se quedó atrás, avisa al área de costos: la página está mostrando recetas viejas."},
-    {c:4, m:"m-buscar", z:[], t:"Eso es todo, y funciona igual en los seis restaurantes del grupo. Buscar la receta, preparar con las cantidades que da la página, registrar lo del día y revisar el resumen. Si algo no cuadra, avisa a costos antes de improvisar."}
+    {c:1, m:"m-entrar", z:["z-usuario","z-clave"], t:"Cada restaurante del grupo tiene su propio enlace y sus propias recetas, pero la página se maneja igual en todos. Lo primero es entrar: costos te da un usuario y una contraseña. El usuario no distingue mayúsculas; la contraseña sí. La clave es del restaurante: no se comparte por fuera del equipo."},
+    {c:2, m:"m-buscar", z:["z-buscador"], t:"Para buscar, escribe una palabra suelta: ceviche, fondo, almíbar. No tienes que escribir el nombre completo, ni con tildes."},
+    {c:2, m:"m-buscar", z:["z-filtros","z-lista"], t:"Si no recuerdas cómo se llama, tócala en la lista de abajo. Los botones de colores filtran por tipo: alimentos, bebidas, subrecetas, adicionales. En la lista aparecen las recetas de tu restaurante, no las de las otras marcas."},
+    {c:3, m:"m-ficha", z:["z-titulo","z-meta"], t:"Esta es la ficha. Arriba va el nombre, el código del sistema, el rendimiento, que es cuánto da la receta completa, y cuántos ingredientes lleva."},
+    {c:3, m:"m-ficha", z:["z-tabla"], t:"La tabla dice cuánto va de cada ingrediente. La última columna lo pasa a gramos o a mililitros, que es lo que de verdad vas a pesar o a medir."},
+    {c:3, m:"m-ficha", z:["z-cantidad"], t:"Si vas a preparar más de una, sube la cantidad con el más, o toca por dos, por cinco, por diez. Todas las cantidades se multiplican solas: no calcules nada a mano."},
+    {c:3, m:"m-ficha", z:["z-tabla"], t:"Cuando un ingrediente está marcado como subreceta, quiere decir que es otra receta de la casa. Tócalo y se abre su propia ficha, con su preparación completa."},
+    {c:3, m:"m-ficha", z:["z-metodo"], t:"Debajo van el método de preparación, los utensilios y el menaje. Si dice que todavía no tiene método, es porque no está escrito en el libro; se escribe en la hoja métodos de preparación y aparece aquí en la siguiente actualización."},
+    {c:3, m:"m-ficha", z:["z-compartir"], t:"Compartir arma un PDF de la ficha, para mandarlo por WhatsApp o imprimirlo y dejarlo en la línea."},
+    {c:4, m:"m-buscar", z:["z-bt-registrar"], t:"Ahora la parte que le sirve al área de costos: registrar lo que produjiste. Se entra por el botón Registrar producción."},
+    {c:4, m:"m-registro", z:["z-quien"], t:"Escribe tu nombre y revisa la fecha. La fecha sale puesta en el día de hoy; cámbiala solo si estás registrando algo de ayer."},
+    {c:4, m:"m-registro", z:["z-produjiste","z-filas"], t:"Escribe qué preparaste y cuántas recetas hiciste. La página calcula cuánto debería salir, según el rendimiento de la ficha."},
+    {c:4, m:"m-registro", z:["z-filas"], t:"Después anota cuánto salió de verdad. Si salió distinto, la página marca la diferencia en amarillo. Eso no es un regaño: es el dato que costos necesita para ajustar la receta o la porción. Si pasó algo, escríbelo en observaciones."},
+    {c:4, m:"m-registro", z:["z-enviar"], t:"Al final del día, un solo envío con todo junto. Si falla el internet sale Reintentar, y nada se pierde: lo que anotaste queda guardado en el teléfono."},
+    {c:5, m:"m-resumen", z:["z-tejas"], t:"En Resumen ves el mes completo: cuántas producciones se registraron, cuántas subrecetas distintas y cuántas salieron distinto a la ficha."},
+    {c:5, m:"m-resumen", z:["z-calendario"], t:"El calendario muestra los días con registro. Los días en blanco son días sin registrar, y ahí se ve de una si el equipo dejó de anotar."},
+    {c:5, m:"m-resumen", z:["z-ranking","z-desvio"], t:"Abajo, lo que más se produce y lo que sale distinto a la ficha. Si una subreceta siempre rinde menos de lo que promete, hay que revisar la receta o la porción."},
+    {c:5, m:"m-buscar", z:["z-fecha"], t:"Una última cosa, la más importante. El recuadro verde de arriba dice de qué día son los datos que estás viendo. Si esa fecha se quedó atrás, avisa al área de costos: la página está mostrando recetas viejas."},
+    {c:5, m:"m-buscar", z:[], t:"Eso es todo, y funciona igual en los seis restaurantes del grupo. Buscar la receta, preparar con las cantidades que da la página, registrar lo del día y revisar el resumen. Si algo no cuadra, avisa a costos antes de improvisar."}
   ];
   var CAPITULOS = [
+    {n:"Qué es esto", d:"para qué sirve"},
     {n:"Entrar", d:"usuario y clave"},
     {n:"Buscar", d:"encontrar la receta"},
     {n:"La ficha", d:"leerla y multiplicarla"},
