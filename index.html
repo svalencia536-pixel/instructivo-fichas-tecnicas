@@ -617,6 +617,13 @@
     var mio = turno;
     var texto = PASOS[i].t;
     var espera = Math.max(4000, texto.length * 68);
+
+    function seguir(ms){
+      if (!corriendo || mio !== turno) return;
+      if (reloj) clearTimeout(reloj);
+      reloj = setTimeout(avanzar, ms);
+    }
+
     var hablo = false;
     if (conVoz && synth){
       try {
@@ -624,14 +631,16 @@
         u.lang = vozEs && vozEs.lang ? vozEs.lang : "es-ES";
         if (vozEs) u.voice = vozEs;
         u.rate = 0.98; u.pitch = 1;
-        u.onend = function(){
-          if (corriendo && mio === turno) { reloj = setTimeout(avanzar, 500); }
-        };
+        u.onend = function(){ seguir(500); };
+        u.onerror = function(){ seguir(300); };
         synth.speak(u);
         hablo = true;
+        // Red de seguridad: hay aparatos donde la voz no arranca y tampoco
+        // avisa. Sin esto el recorrido se quedaria trabado en un paso.
+        seguir(espera + 6000);
       } catch(e){ hablo = false; }
     }
-    if (!hablo) { reloj = setTimeout(avanzar, espera); }
+    if (!hablo) { seguir(espera); }
   }
 
   function avanzar(){
