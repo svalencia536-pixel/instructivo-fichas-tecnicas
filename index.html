@@ -196,7 +196,8 @@
   </div>
   <p class="entradilla">
     Recorrido narrado, de principio a fin: buscar una receta, preparar con las cantidades que da la
-    página, registrar la producción del día y leer el resumen del mes. Sirve para los restaurantes
+    página, registrar la producción del día, leer el resumen del mes y consultar en qué recetas
+    entra un insumo. Sirve para los restaurantes
     del grupo: cada uno entra por su propio enlace y ve sus propias recetas, pero la página se maneja
     igual en todos. Dale al botón y el recorrido avanza solo, con voz y subtítulos.
   </p>
@@ -242,6 +243,7 @@
             <div class="grupo">
               <span class="bt">Ver en celular</span>
               <span class="bt zona" id="z-bt-registrar">Registrar producción</span>
+              <span class="bt zona" id="z-bt-insumo">Buscar por insumo</span>
               <span class="bt">Tema oscuro</span>
               <span class="bt">Salir · COCINA</span>
             </div>
@@ -408,6 +410,63 @@
             <b>Reintentar</b>: lo anotado queda guardado en el aparato.</p>
         </div>
 
+
+        <!-- BUSCAR POR INSUMO -->
+        <div class="p" id="m-insumos" hidden>
+          <div class="p-tabs">
+            <span class="bt">← Fichas</span>
+            <span class="bt act" style="flex:0 0 auto;">Buscar por insumo</span>
+          </div>
+          <div class="zona" id="z-ins-buscador" style="margin-top:12px;">
+            <div class="campo">queso mozzarella</div>
+          </div>
+
+          <div class="p-tejas zona" id="z-ins-tejas">
+            <div class="caja p-teja"><b class="cifra">24</b><span>recetas lo llevan</span>
+              <small>de las 760 de la carta</small></div>
+            <div class="caja p-teja"><b class="cifra">6</b><span>son subrecetas</span>
+              <small>ahí entra de forma indirecta</small></div>
+            <div class="caja p-teja"><b class="cifra">4.130</b><span>gramos en total</span>
+              <small>si se hiciera una de cada receta</small></div>
+            <div class="caja p-teja"><b class="cifra">700 GR</b><span>la que más lleva</span>
+              <small>011820 · LASAÑA DE LA CASA</small></div>
+          </div>
+
+          <div class="grupo" style="margin-top:14px; align-items:center;">
+            <span class="bt verde">Mayor cantidad</span>
+            <span class="bt">A – Z</span>
+            <span class="bt verde zona" id="z-ins-excel" style="margin-left:auto;">
+              Descargar Excel</span>
+          </div>
+
+          <div class="zona" id="z-ins-tabla">
+            <div class="caja" style="padding:0; overflow:hidden; margin-top:8px;">
+              <table class="p-tabla" style="margin:0;">
+                <thead><tr><th style="padding-left:12px; text-align:center;">#</th>
+                  <th>Código</th><th>Receta</th><th>Grupo</th><th>Cantidad</th>
+                  <th>Unidad</th><th style="padding-right:12px;">Gramos / ml</th></tr></thead>
+                <tbody>
+                  <tr><td style="text-align:center;">1</td><td class="cifra">011820</td>
+                    <td>LASAÑA DE LA CASA</td><td>Alimentos</td>
+                    <td class="cifra">700</td><td>GR</td>
+                    <td class="cifra" style="padding-right:12px;">700</td></tr>
+                  <tr><td style="text-align:center;">2</td><td class="cifra">S014033</td>
+                    <td>SALSA DE QUESOS <span class="p-sub">SUBRECETA</span></td>
+                    <td>Subreceta</td><td class="cifra">450</td><td>GR</td>
+                    <td class="cifra" style="padding-right:12px;">450</td></tr>
+                  <tr><td style="text-align:center;">3</td><td class="cifra">011045</td>
+                    <td>PIZZA MARGARITA</td><td>Alimentos</td>
+                    <td class="cifra">180</td><td>GR</td>
+                    <td class="cifra" style="padding-right:12px;">180</td></tr>
+                  <tr><td style="text-align:center;">4</td><td class="cifra">028011</td>
+                    <td>ADICIÓN DE QUESO</td><td>Adicionales</td>
+                    <td class="cifra">50</td><td>GR</td>
+                    <td class="cifra" style="padding-right:12px;">50</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
         <!-- RESUMEN -->
         <div class="p" id="m-resumen" hidden>
           <div class="p-tabs">
@@ -528,20 +587,24 @@
     {c:2, m:"m-buscar", z:["z-filtros","z-lista"], t:"Si no recuerdas cómo se llama, tócala en la lista de abajo. Los botones de colores filtran por tipo: alimentos, bebidas, subrecetas, adicionales. En la lista aparecen las recetas de tu restaurante, no las de las otras marcas."},
     {c:3, m:"m-ficha", z:["z-titulo","z-meta"], t:"Esta es la ficha. Arriba va el nombre, el código del sistema, el rendimiento, que es cuánto da la receta completa, y cuántos ingredientes lleva."},
     {c:3, m:"m-ficha", z:["z-tabla"], t:"La tabla dice cuánto va de cada ingrediente. La última columna lo pasa a gramos o a mililitros, que es lo que de verdad vas a pesar o a medir."},
-    {c:3, m:"m-ficha", z:["z-cantidad"], t:"Si vas a preparar más de una, sube la cantidad con el más, o toca por dos, por cinco, por diez. Todas las cantidades se multiplican solas: no calcules nada a mano."},
+    {c:3, m:"m-ficha", z:["z-cantidad"], t:"Si vas a preparar más de una, sube la cantidad con el más, o toca por dos, por cinco, por diez. Y si la ficha es una subreceta, también hay media receta: el botón por cero coma cinco. Todas las cantidades se multiplican solas: no calcules nada a mano."},
     {c:3, m:"m-ficha", z:["z-tabla"], t:"Cuando un ingrediente está marcado como subreceta, quiere decir que es otra receta de la casa. Tócalo y se abre su propia ficha, con su preparación completa."},
     {c:3, m:"m-ficha", z:["z-metodo"], t:"Debajo van el método de preparación, los utensilios y el menaje. Si dice que todavía no tiene método, es porque no está escrito en el libro; se escribe en la hoja métodos de preparación y aparece aquí en la siguiente actualización."},
     {c:3, m:"m-ficha", z:["z-compartir"], t:"Compartir arma un PDF de la ficha, para mandarlo por WhatsApp o imprimirlo y dejarlo en la línea."},
     {c:4, m:"m-buscar", z:["z-bt-registrar"], t:"Ahora la parte que le sirve al área de costos: registrar lo que produjiste. Se entra por el botón Registrar producción."},
     {c:4, m:"m-registro", z:["z-quien"], t:"Escribe tu nombre y revisa la fecha. La fecha sale puesta en el día de hoy; cámbiala solo si estás registrando algo de ayer."},
-    {c:4, m:"m-registro", z:["z-produjiste","z-filas"], t:"Escribe qué preparaste y cuántas recetas hiciste. La página calcula cuánto debería salir, según el rendimiento de la ficha."},
+    {c:4, m:"m-registro", z:["z-produjiste","z-filas"], t:"Escribe qué preparaste y cuántas recetas hiciste. Si hiciste media tanda, pon cero coma cinco: el contador va de media en media. La página calcula cuánto debería salir, según el rendimiento de la ficha."},
     {c:4, m:"m-registro", z:["z-filas"], t:"Después anota cuánto salió de verdad. Si salió distinto, la página marca la diferencia en amarillo. Eso no es un regaño: es el dato que costos necesita para ajustar la receta o la porción. Si pasó algo, escríbelo en observaciones."},
     {c:4, m:"m-registro", z:["z-enviar"], t:"Al final del día, un solo envío con todo junto. Si falla el internet sale Reintentar, y nada se pierde: lo que anotaste queda guardado en el teléfono."},
     {c:5, m:"m-resumen", z:["z-tejas"], t:"En Resumen ves el mes completo: cuántas producciones se registraron, cuántas subrecetas distintas y cuántas salieron distinto a la ficha."},
     {c:5, m:"m-resumen", z:["z-calendario"], t:"El calendario muestra los días con registro. Los días en blanco son días sin registrar, y ahí se ve de una si el equipo dejó de anotar."},
     {c:5, m:"m-resumen", z:["z-ranking","z-desvio"], t:"Abajo, lo que más se produce y lo que sale distinto a la ficha. Si una subreceta siempre rinde menos de lo que promete, hay que revisar la receta o la porción."},
     {c:5, m:"m-buscar", z:["z-fecha"], t:"Una última cosa, la más importante. El recuadro verde de arriba dice de qué día son los datos que estás viendo. Si esa fecha se quedó atrás, avisa al área de costos: la página está mostrando recetas viejas."},
-    {c:5, m:"m-buscar", z:[], t:"Eso es todo, y funciona igual en los seis restaurantes del grupo. Buscar la receta, preparar con las cantidades que da la página, registrar lo del día y revisar el resumen. Si algo no cuadra, avisa a costos antes de improvisar."}
+    {c:6, m:"m-buscar", z:["z-bt-insumo"], t:"Hay un segundo botón arriba: Buscar por insumo. Sirve para la pregunta al revés: no qué lleva un plato, sino en qué platos entra un insumo."},
+    {c:6, m:"m-insumos", z:["z-ins-buscador"], t:"Escribes el insumo —queso, lomo, harina— y lo eliges de la lista. Cada uno dice en cuántas recetas aparece."},
+    {c:6, m:"m-insumos", z:["z-ins-tejas","z-ins-tabla"], t:"Sale el resumen: cuántas recetas lo llevan, cuántas de esas son subrecetas y cuánto suma en total. Debajo, la lista numerada con el código, la receta y cuánto lleva cada una."},
+    {c:6, m:"m-insumos", z:["z-ins-excel"], t:"Descargar Excel baja esa misma tabla al computador, con el formato del grupo, para imprimirla o mandarla al área de costos."},
+    {c:6, m:"m-buscar", z:[], t:"Eso es todo, y funciona igual en los seis restaurantes del grupo. Buscar la receta, preparar con las cantidades que da la página, registrar lo del día, revisar el resumen y consultar por insumo cuando haga falta. Si algo no cuadra, avisa a costos antes de improvisar."}
   ];
   var CAPITULOS = [
     {n:"Qué es esto", d:"para qué sirve"},
@@ -549,7 +612,8 @@
     {n:"Buscar", d:"encontrar la receta"},
     {n:"La ficha", d:"leerla y multiplicarla"},
     {n:"Registrar", d:"la producción del día"},
-    {n:"El resumen", d:"cómo va el mes"}
+    {n:"El resumen", d:"cómo va el mes"},
+    {n:"Por insumo", d:"en qué recetas entra"}
   ];
 
   var $ = function(id){ return document.getElementById(id); };
