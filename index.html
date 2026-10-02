@@ -197,7 +197,7 @@
   <p class="entradilla">
     Recorrido narrado, de principio a fin: buscar una receta, preparar con las cantidades que da la
     página, registrar la producción del día, leer el resumen del mes y consultar en qué recetas
-    entra un insumo. Sirve para los restaurantes
+    entra un insumo, armar el pedido de un evento y medir qué pasa si un precio sube. Sirve para los restaurantes
     del grupo: cada uno entra por su propio enlace y ve sus propias recetas, pero la página se maneja
     igual en todos. Dale al botón y el recorrido avanza solo, con voz y subtítulos.
   </p>
@@ -244,6 +244,8 @@
               <span class="bt">Ver en celular</span>
               <span class="bt zona" id="z-bt-registrar">Registrar producción</span>
               <span class="bt zona" id="z-bt-insumo">Buscar por insumo</span>
+              <span class="bt zona" id="z-bt-pedido">Pedido</span>
+              <span class="bt zona" id="z-bt-precios">Precios</span>
               <span class="bt">Tema oscuro</span>
               <span class="bt">Salir · COCINA</span>
             </div>
@@ -467,6 +469,116 @@
             </div>
           </div>
         </div>
+
+        <!-- PEDIDO -->
+        <div class="p" id="m-pedido" hidden>
+          <div class="p-tabs">
+            <span class="bt">← Fichas</span>
+            <span class="bt act" style="flex:0 0 auto;">Pedido para evento</span>
+          </div>
+          <div class="zona" id="z-ped-buscador" style="margin-top:12px;">
+            <div class="campo">rissotto frutti di mare</div>
+          </div>
+
+          <div class="zona" id="z-ped-elegidas" style="margin-top:10px;">
+            <div class="caja" style="padding:9px 12px; margin-bottom:6px;">
+              RISSOTTO FRUTI DI MARE <span class="p-sub">R03002</span>
+              <b class="cifra" style="float:right;">40</b></div>
+            <div class="caja" style="padding:9px 12px; margin-bottom:6px;">
+              TRIO DE ARANCINI <span class="p-sub">R01010</span>
+              <b class="cifra" style="float:right;">40</b></div>
+            <div class="caja" style="padding:9px 12px;">
+              SALMON MARACUYA Y PISTACHOS <span class="p-sub">R05004</span>
+              <b class="cifra" style="float:right;">25</b></div>
+          </div>
+
+          <div class="grupo zona" id="z-ped-abrir" style="margin-top:14px; align-items:center;">
+            <span class="bt">Abrir los productos de producción en su materia prima</span>
+            <span class="bt verde" style="margin-left:auto;">Descargar Excel</span>
+            <span class="bt verde">Compartir PDF</span>
+          </div>
+
+          <div class="zona" id="z-ped-hojas">
+            <div class="caja" style="padding:0; overflow:hidden; margin-top:10px;">
+              <div style="padding:10px 12px; border-bottom:1px solid var(--linea);">
+                <b>Pedido a la zona de producción</b> <span class="p-sub">19 líneas</span></div>
+              <table class="p-tabla" style="margin:0;">
+                <thead><tr><th style="padding-left:12px;">Código</th><th>Insumo</th>
+                  <th>Cantidad</th><th style="padding-right:12px;">Unidad</th></tr></thead>
+                <tbody>
+                  <tr><td class="cifra" style="padding-left:12px;">S011033</td>
+                    <td>SALMON PORC 200</td><td class="cifra">25</td>
+                    <td style="padding-right:12px;">PORC</td></tr>
+                  <tr><td class="cifra" style="padding-left:12px;">S023064</td>
+                    <td>MIX DE MARISCOS</td><td class="cifra">40</td>
+                    <td style="padding-right:12px;">PORC</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="caja" style="padding:0; overflow:hidden; margin-top:8px;">
+              <div style="padding:10px 12px; border-bottom:1px solid var(--linea);">
+                <b>Pedido de materia prima del punto de venta</b>
+                <span class="p-sub">11 líneas</span></div>
+              <table class="p-tabla" style="margin:0;">
+                <tbody>
+                  <tr><td class="cifra" style="padding-left:12px;">—</td>
+                    <td>QUESO MOZZARELLA BURRATA</td><td class="cifra">1.875</td>
+                    <td style="padding-right:12px;">GRM</td></tr>
+                  <tr><td class="cifra" style="padding-left:12px;">—</td>
+                    <td>QUESO GRANA PADANO</td><td class="cifra">800</td>
+                    <td style="padding-right:12px;">GRM</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRECIOS -->
+        <div class="p" id="m-precios" hidden>
+          <div class="p-tabs">
+            <span class="bt">← Fichas</span>
+            <span class="bt act" style="flex:0 0 auto;">Simulador de precios</span>
+          </div>
+          <div class="zona" id="z-pre-buscador" style="margin-top:12px;">
+            <div class="campo">aceite de oliva</div>
+          </div>
+
+          <div class="grupo zona" id="z-pre-pct" style="margin-top:12px; align-items:center;">
+            <span class="bt">Variación % <b class="cifra">15</b></span>
+            <span class="bt">Costo nuevo por unidad <b class="cifra">$ 39,13</b></span>
+          </div>
+
+          <div class="p-tejas zona" id="z-pre-tejas">
+            <div class="caja p-teja"><b class="cifra">$ 34</b><span>cuesta hoy</span>
+              <small>por ML</small></div>
+            <div class="caja p-teja"><b class="cifra">107</b><span>recetas afectadas</span>
+              <small>de las 494 de la carta</small></div>
+            <div class="caja p-teja"><b class="cifra">78</b><span>de esas, se venden</span>
+              <small>las demás son subrecetas</small></div>
+            <div class="caja p-teja"><b class="cifra">+$ 2.716</b><span>impacto por plato</span>
+              <small>una unidad de cada uno</small></div>
+          </div>
+
+          <div class="zona" id="z-pre-tabla">
+            <div class="caja" style="padding:0; overflow:hidden; margin-top:8px;">
+              <table class="p-tabla" style="margin:0;">
+                <thead><tr><th style="padding-left:12px;">Código</th><th>Receta</th>
+                  <th>Costo hoy</th><th>Con el alza</th>
+                  <th style="padding-right:12px;">% costo</th></tr></thead>
+                <tbody>
+                  <tr><td class="cifra" style="padding-left:12px;">R02020</td>
+                    <td>SPAGHETTI PESCATORE</td><td class="cifra">$ 14.031</td>
+                    <td class="cifra">$ 14.230</td>
+                    <td class="cifra" style="padding-right:12px;">22,0 → 22,3</td></tr>
+                  <tr><td class="cifra" style="padding-left:12px;">R07011</td>
+                    <td>PANINI TOSCANA <span class="p-sub">POR SUBRECETA</span></td>
+                    <td class="cifra">$ 5.784</td><td class="cifra">$ 5.960</td>
+                    <td class="cifra" style="padding-right:12px;">15,6 → 16,1</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
         <!-- RESUMEN -->
         <div class="p" id="m-resumen" hidden>
           <div class="p-tabs">
@@ -604,7 +716,16 @@
     {c:6, m:"m-insumos", z:["z-ins-buscador"], t:"Escribes el insumo —queso, lomo, harina— y lo eliges de la lista. Cada uno dice en cuántas recetas aparece."},
     {c:6, m:"m-insumos", z:["z-ins-tejas","z-ins-tabla"], t:"Sale el resumen: cuántas recetas lo llevan, cuántas de esas son subrecetas y cuánto suma en total. Debajo, la lista numerada con el código, la receta y cuánto lleva cada una."},
     {c:6, m:"m-insumos", z:["z-ins-excel"], t:"Descargar Excel baja esa misma tabla al computador, con el formato del grupo, para imprimirla o mandarla al área de costos."},
-    {c:6, m:"m-buscar", z:[], t:"Eso es todo, y funciona igual en los seis restaurantes del grupo. Buscar la receta, preparar con las cantidades que da la página, registrar lo del día, revisar el resumen y consultar por insumo cuando haga falta. Si algo no cuadra, avisa a costos antes de improvisar."}
+    {c:7, m:"m-buscar", z:["z-bt-pedido"], t:"El botón Pedido sirve para cuando hay un evento. En vez de sacar las cuentas a mano, le dices qué vas a preparar y él dice qué hay que pedir."},
+    {c:7, m:"m-pedido", z:["z-ped-buscador","z-ped-elegidas"], t:"Buscas cada plato, lo tocas y le pones cuántos vas a hacer. Cuarenta rissottos, cuarenta tríos de arancini, veinticinco salmones."},
+    {c:7, m:"m-pedido", z:["z-ped-hojas"], t:"Abajo salen los pedidos separados por área, nunca revueltos: lo que se le pide ya hecho a la zona de producción, y la materia prima que compra el punto de venta. Son dos listas para dos personas distintas."},
+    {c:7, m:"m-pedido", z:["z-ped-abrir"], t:"Si marcas abrir los productos de producción, las subrecetas se abren en sus ingredientes y aparece una tercera lista: lo que tiene que comprar producción para poder hacerlas."},
+    {c:7, m:"m-pedido", z:["z-ped-abrir"], t:"Y lo bajas en Excel o lo compartes en PDF, ya listo para mandarlo. Al imprimir sale con el logo del restaurante."},
+    {c:8, m:"m-buscar", z:["z-bt-precios"], t:"El último botón es Precios, y este solo lo ven los usuarios administrativos: en la pantalla de cocina no aparece, porque trabaja con costos."},
+    {c:8, m:"m-precios", z:["z-pre-buscador","z-pre-pct"], t:"Escoges el insumo que subió de precio y le dices cuánto sube. Por ejemplo el aceite de oliva, quince por ciento."},
+    {c:8, m:"m-precios", z:["z-pre-tejas"], t:"Arriba dice cuántas recetas se encarecen. De las ciento siete, setenta y ocho son platos que se venden; las demás son subrecetas."},
+    {c:8, m:"m-precios", z:["z-pre-tabla"], t:"Y abajo, plato por plato: lo que cuesta hoy, lo que costaría con el alza, y cómo se mueve el costo sobre la venta. Las que dicen por subreceta no llevan el aceite en su lista: les entra por dentro de una salsa."},
+    {c:8, m:"m-buscar", z:[], t:"Eso es todo, y funciona igual en los seis restaurantes del grupo. Buscar la receta, preparar con las cantidades que da la página, registrar lo del día, revisar el resumen, consultar por insumo, armar el pedido de un evento y medir qué pasa si un precio sube. Si algo no cuadra, avisa a costos antes de improvisar."}
   ];
   var CAPITULOS = [
     {n:"Qué es esto", d:"para qué sirve"},
@@ -613,7 +734,9 @@
     {n:"La ficha", d:"leerla y multiplicarla"},
     {n:"Registrar", d:"la producción del día"},
     {n:"El resumen", d:"cómo va el mes"},
-    {n:"Por insumo", d:"en qué recetas entra"}
+    {n:"Por insumo", d:"en qué recetas entra"},
+    {n:"Pedido", d:"la materia prima de un evento"},
+    {n:"Precios", d:"qué pasa si un insumo sube"}
   ];
 
   var $ = function(id){ return document.getElementById(id); };
