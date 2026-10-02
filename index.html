@@ -40,7 +40,7 @@
     font-family:"IBM Plex Sans", system-ui, -apple-system, Segoe UI, sans-serif;
     font-size:16px; line-height:1.5;
   }
-  .envoltura{max-width:980px; margin:0 auto; padding-inline:16px; padding-block:28px 56px;}
+  .envoltura{max-width:1500px; margin:0 auto; padding-inline:24px; padding-block:28px 56px;}
   h1,h2,h3{font-family:"Archivo", system-ui, sans-serif; text-wrap:balance; margin:0;}
   h1{font-size:clamp(26px,5vw,38px); font-weight:700; letter-spacing:-.015em;}
   h2{font-size:20px; font-weight:600;}
@@ -49,7 +49,7 @@
   .cabecera{display:flex; flex-wrap:wrap; gap:6px 16px; align-items:center; margin-bottom:6px;}
   .marca-grupo{width:46px; height:46px; border-radius:10px; background:#fff;
     border:1px solid var(--linea); flex:0 0 auto;}
-  .entradilla{color:var(--tinta-suave); max-width:62ch; margin:10px 0 0;}
+  .entradilla{color:var(--tinta-suave); margin:10px 0 0;}
 
   /* ---------------- reproductor ---------------- */
   .reproductor{margin-top:26px; background:var(--tarjeta); border:1px solid var(--linea);
@@ -65,7 +65,7 @@
     border:1px solid var(--linea); border-radius:99px; padding:2px 9px;}
 
   .pie{padding:18px 20px 6px; min-height:96px;}
-  .pie p{margin:0; font-size:clamp(17px,2.4vw,21px); line-height:1.45; max-width:60ch;}
+  .pie p{margin:0; font-size:clamp(17px,1.6vw,23px); line-height:1.45;}
   .capitulo-actual{margin-bottom:6px;}
 
   .mandos{display:flex; flex-wrap:wrap; gap:10px; align-items:center; padding:12px 20px 18px;}
@@ -169,7 +169,7 @@
   .escrito li p{margin:0;}
   .escrito li.cab{grid-template-columns:1fr; border-bottom:none; padding:20px 0 2px;}
   .cierre{margin-top:34px; border-top:1px solid var(--linea); padding-top:18px;
-    color:var(--tinta-suave); font-size:14px; display:grid; gap:8px; max-width:70ch;}
+    color:var(--tinta-suave); font-size:14px; display:grid; gap:8px;}
   .cierre b{color:var(--tinta);}
 
   @media (max-width:640px){
@@ -753,7 +753,10 @@
   function escalar(){
     var activa = lienzo.querySelector(".p:not([hidden])");
     if (!activa) return;
-    var k = Math.min(1, escenario.clientWidth / 880);
+    /* Antes estaba topado en 1 y la pantalla se quedaba en 880 px, dejando
+       hueco a los lados. Ahora crece hasta llenar el marco; el tope de 2 es
+       para que en un monitor muy ancho no quede desproporcionada. */
+    var k = Math.min(2, escenario.clientWidth / 880);
     lienzo.style.transform = "scale(" + k + ")";
     escenario.style.height = Math.round(activa.offsetHeight * k) + "px";
   }
