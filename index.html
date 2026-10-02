@@ -40,7 +40,7 @@
     font-family:"IBM Plex Sans", system-ui, -apple-system, Segoe UI, sans-serif;
     font-size:16px; line-height:1.5;
   }
-  .envoltura{max-width:1180px; margin:0 auto; padding-inline:24px; padding-block:24px 48px;}
+  .envoltura{max-width:1320px; margin:0 auto; padding-inline:20px; padding-block:16px 40px;}
   h1,h2,h3{font-family:"Archivo", system-ui, sans-serif; text-wrap:balance; margin:0;}
   h1{font-size:clamp(26px,5vw,38px); font-weight:700; letter-spacing:-.015em;}
   h2{font-size:20px; font-weight:600;}
@@ -52,7 +52,7 @@
   .entradilla{color:var(--tinta-suave); margin:10px 0 0;}
 
   /* ---------------- reproductor ---------------- */
-  .reproductor{margin:26px auto 0; background:var(--tarjeta); border:1px solid var(--linea);
+  .reproductor{margin:16px auto 0; background:var(--tarjeta); border:1px solid var(--linea);
     border-radius:10px; box-shadow:var(--sombra); overflow:hidden;}
   .barra-progreso{height:4px; background:var(--linea-fina);}
   .barra-progreso div{height:100%; width:0; background:var(--verde); transition:width .4s linear;}
@@ -64,11 +64,11 @@
     text-transform:uppercase; color:var(--tinta-suave); background:var(--tarjeta);
     border:1px solid var(--linea); border-radius:99px; padding:2px 9px;}
 
-  .pie{padding:18px 20px 6px; min-height:96px;}
-  .pie p{margin:0; font-size:clamp(17px,1.6vw,23px); line-height:1.45;}
+  .pie{padding:14px 20px 6px; min-height:72px;}
+  .pie p{margin:0; font-size:clamp(14px,1.05vw,17px); line-height:1.5;}
   .capitulo-actual{margin-bottom:6px;}
 
-  .mandos{display:flex; flex-wrap:wrap; gap:10px; align-items:center; padding:12px 20px 18px;}
+  .mandos{display:flex; flex-wrap:wrap; gap:10px; align-items:center; padding:10px 20px 14px;}
   button{font:inherit; color:inherit; cursor:pointer;}
   .boton{background:var(--tarjeta); border:1px solid var(--linea); border-radius:7px;
     padding:8px 14px; font-size:14px; font-weight:500; display:inline-flex; align-items:center; gap:7px;}
@@ -758,11 +758,11 @@
        mover el raton. Por eso se topa por ancho Y por alto. */
     var reproductor = escenario.parentNode;
     var resto = reproductor.offsetHeight - escenario.offsetHeight;
-    var libre = window.innerHeight - reproductor.offsetTop - resto - 28;
+    var libre = window.innerHeight - reproductor.offsetTop - resto - 16;
     /* El ancho se mide contra el MARCO, no contra el escenario: el escenario
        ya viene encogido de la pasada anterior y usarlo encogeria un poco mas
        en cada vuelta, hasta dejar la pantalla diminuta. */
-    var marco = reproductor.parentNode.clientWidth - 48;
+    var marco = reproductor.parentNode.clientWidth - 40;
     var k = Math.min(1,
                      marco / 880,
                      Math.max(240, libre) / activa.offsetHeight);
