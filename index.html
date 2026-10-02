@@ -52,7 +52,7 @@
   .entradilla{color:var(--tinta-suave); margin:10px 0 0;}
 
   /* ---------------- reproductor ---------------- */
-  .reproductor{margin-top:26px; background:var(--tarjeta); border:1px solid var(--linea);
+  .reproductor{margin:26px auto 0; background:var(--tarjeta); border:1px solid var(--linea);
     border-radius:10px; box-shadow:var(--sombra); overflow:hidden;}
   .barra-progreso{height:4px; background:var(--linea-fina);}
   .barra-progreso div{height:100%; width:0; background:var(--verde); transition:width .4s linear;}
@@ -759,11 +759,19 @@
     var reproductor = escenario.parentNode;
     var resto = reproductor.offsetHeight - escenario.offsetHeight;
     var libre = window.innerHeight - reproductor.offsetTop - resto - 28;
+    /* El ancho se mide contra el MARCO, no contra el escenario: el escenario
+       ya viene encogido de la pasada anterior y usarlo encogeria un poco mas
+       en cada vuelta, hasta dejar la pantalla diminuta. */
+    var marco = reproductor.parentNode.clientWidth - 48;
     var k = Math.min(1,
-                     escenario.clientWidth / 880,
+                     marco / 880,
                      Math.max(240, libre) / activa.offsetHeight);
     lienzo.style.transform = "scale(" + k + ")";
     escenario.style.height = Math.round(activa.offsetHeight * k) + "px";
+    /* El reproductor se encoge hasta medir lo que mide la pantalla ya escalada.
+       Si se dejara al ancho del marco quedarian cientos de pixeles vacios a los
+       lados, porque la pantalla no puede crecer mas sin salirse de la vista. */
+    reproductor.style.maxWidth = Math.ceil(880 * k) + "px";
   }
   window.addEventListener("resize", escalar);
 
