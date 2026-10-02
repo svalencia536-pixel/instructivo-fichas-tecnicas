@@ -59,7 +59,7 @@
 
   .escenario{position:relative; background:var(--papel); border-bottom:1px solid var(--linea-fina);
     overflow:hidden;}
-  .lienzo{width:880px; transform-origin:top left;}
+  .lienzo{width:880px; margin:0 auto; transform-origin:top center;}
   .sello{position:absolute; right:10px; bottom:8px; z-index:3; font-size:10px; letter-spacing:.07em;
     text-transform:uppercase; color:var(--tinta-suave); background:var(--tarjeta);
     border:1px solid var(--linea); border-radius:99px; padding:2px 9px;}
@@ -753,10 +753,15 @@
   function escalar(){
     var activa = lienzo.querySelector(".p:not([hidden])");
     if (!activa) return;
-    /* Antes estaba topado en 1 y la pantalla se quedaba en 880 px, dejando
-       hueco a los lados. Ahora crece hasta llenar el marco; el tope de 2 es
-       para que en un monitor muy ancho no quede desproporcionada. */
-    var k = Math.min(2, escenario.clientWidth / 880);
+    /* La pantalla de ejemplo no puede crecer tanto que empuje el subtitulo
+       fuera de la vista: mientras corre el audio hay que poder leerlo sin
+       mover el raton. Por eso se topa por ancho Y por alto. */
+    var reproductor = escenario.parentNode;
+    var resto = reproductor.offsetHeight - escenario.offsetHeight;
+    var libre = window.innerHeight - reproductor.offsetTop - resto - 28;
+    var k = Math.min(1,
+                     escenario.clientWidth / 880,
+                     Math.max(240, libre) / activa.offsetHeight);
     lienzo.style.transform = "scale(" + k + ")";
     escenario.style.height = Math.round(activa.offsetHeight * k) + "px";
   }
