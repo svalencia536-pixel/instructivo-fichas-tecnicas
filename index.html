@@ -58,7 +58,7 @@
   .barra-progreso div{height:100%; width:0; background:var(--verde); transition:width .4s linear;}
 
   .escenario{position:relative; background:var(--papel); border-bottom:1px solid var(--linea-fina);
-    overflow:hidden;}
+    overflow:hidden; margin:0 auto;}
   .lienzo{width:880px; margin:0 auto; transform-origin:top center;}
   .sello{position:absolute; right:10px; bottom:8px; z-index:3; font-size:10px; letter-spacing:.07em;
     text-transform:uppercase; color:var(--tinta-suave); background:var(--tarjeta);
@@ -768,6 +768,11 @@
                      Math.max(240, libre) / activa.offsetHeight);
     lienzo.style.transform = "scale(" + k + ")";
     escenario.style.height = Math.round(activa.offsetHeight * k) + "px";
+    /* El escenario se cine a la pantalla ya escalada, para que no queden
+       cientos de pixeles vacios a los lados. Esto NO realimenta el calculo
+       porque el ancho se mide contra el marco, y el subtitulo de abajo
+       conserva todo el ancho. */
+    escenario.style.maxWidth = Math.ceil(880 * k) + "px";
   }
   window.addEventListener("resize", escalar);
 
