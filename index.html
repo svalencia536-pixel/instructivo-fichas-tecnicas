@@ -757,13 +757,23 @@
        fuera de la vista: mientras corre el audio hay que poder leerlo sin
        mover el raton. Por eso se topa por ancho Y por alto. */
     var reproductor = escenario.parentNode;
-    var resto = reproductor.offsetHeight - escenario.offsetHeight;
+    /* Solo cuenta lo que hay que tener a la vista mientras corre el recorrido:
+       la barra, el subtitulo y los mandos. La tira de capitulos es navegacion
+       y puede quedar debajo del pliegue; incluirla achicaba la pantalla casi
+       cien pixeles sin necesidad. */
+    var resto = 0;
+    for (var c = 0; c < reproductor.children.length; c++){
+      var hijo = reproductor.children[c];
+      if (hijo !== escenario && !hijo.classList.contains("capitulos")){
+        resto += hijo.offsetHeight;
+      }
+    }
     var libre = window.innerHeight - reproductor.offsetTop - resto - 16;
     /* El ancho se mide contra el MARCO, no contra el escenario: el escenario
        ya viene encogido de la pasada anterior y usarlo encogeria un poco mas
        en cada vuelta, hasta dejar la pantalla diminuta. */
     var marco = reproductor.parentNode.clientWidth - 40;
-    var k = Math.min(1,
+    var k = Math.min(1.5,
                      marco / 880,
                      Math.max(240, libre) / activa.offsetHeight);
     lienzo.style.transform = "scale(" + k + ")";
