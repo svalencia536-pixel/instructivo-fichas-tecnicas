@@ -908,19 +908,36 @@
     if (corriendo) decir();
   }
 
+  // ---- pantalla encendida mientras corre el recorrido ----
+  var bloqueo = null;
+  function mantenerEncendida(){
+    if (!("wakeLock" in navigator) || bloqueo) return;
+    navigator.wakeLock.request("screen").then(function(b){
+      bloqueo = b;
+      b.addEventListener("release", function(){ if (bloqueo === b) bloqueo = null; });
+      if (!corriendo) soltarPantalla();
+    }).catch(function(){});
+  }
+  function soltarPantalla(){
+    if (bloqueo){ var b = bloqueo; bloqueo = null; b.release().catch(function(){}); }
+  }
+  document.addEventListener("visibilitychange", function(){
+    if (document.visibilityState === "visible" && corriendo) mantenerEncendida();
+  });
+
   function terminar(){
-    corriendo = false; callar();
+    corriendo = false; callar(); soltarPantalla();
     btPlay.textContent = "▶ Ver otra vez";
     btPlay.setAttribute("aria-pressed", "false");
   }
 
   function reproducir(){
-    corriendo = true;
+    corriendo = true; mantenerEncendida();
     btPlay.textContent = "❚❚ Pausar";
     pintar(); decir();
   }
   function pausar(){
-    corriendo = false; callar();
+    corriendo = false; callar(); soltarPantalla();
     btPlay.textContent = "▶ Continuar";
   }
 
