@@ -59,7 +59,9 @@
 
   .escenario{position:relative; background:var(--papel); border-bottom:1px solid var(--linea-fina);
     overflow:hidden; margin:0 auto;}
-  .lienzo{width:880px; margin:0 auto; transform-origin:top center;}
+  .lienzo{width:880px; margin:0; transform-origin:0 0; position:relative;}
+  .escenario.cerca .lienzo{transition:transform .45s ease;}
+  @media (prefers-reduced-motion: reduce){ .escenario.cerca .lienzo{transition:none;} }
   .sello{position:absolute; right:10px; bottom:8px; z-index:3; font-size:10px; letter-spacing:.07em;
     text-transform:uppercase; color:var(--tinta-suave); background:var(--tarjeta);
     border:1px solid var(--linea); border-radius:99px; padding:2px 9px;}
@@ -750,17 +752,28 @@
   var synth = window.speechSynthesis || null;
 
   // ---- escalar la pantalla simulada al ancho disponible ----
+  /* Rectangulo que cubre las zonas resaltadas del paso, medido en pixeles de
+     la pantalla sin escalar (880 de ancho). */
+  function cajaFoco(activa){
+    var focos = activa.querySelectorAll(".zona.foco");
+    var x1 = Infinity, y1 = Infinity, x2 = -Infinity, y2 = -Infinity;
+    for (var f = 0; f < focos.length; f++){
+      var el = focos[f], w = el.offsetWidth, h = el.offsetHeight, x = 0, y = 0;
+      if (!w && !h) continue;
+      while (el && el !== lienzo){ x += el.offsetLeft; y += el.offsetTop; el = el.offsetParent; }
+      x1 = Math.min(x1, x); y1 = Math.min(y1, y);
+      x2 = Math.max(x2, x + w); y2 = Math.max(y2, y + h);
+    }
+    if (x1 === Infinity) return null;
+    return {x: x1, y: y1, w: x2 - x1, h: y2 - y1};
+  }
   function escalar(){
     var activa = lienzo.querySelector(".p:not([hidden])");
     if (!activa) return;
-    /* La pantalla de ejemplo no puede crecer tanto que empuje el subtitulo
-       fuera de la vista: mientras corre el audio hay que poder leerlo sin
-       mover el raton. Por eso se topa por ancho Y por alto. */
     var reproductor = escenario.parentNode;
     /* Solo cuenta lo que hay que tener a la vista mientras corre el recorrido:
        la barra, el subtitulo y los mandos. La tira de capitulos es navegacion
-       y puede quedar debajo del pliegue; incluirla achicaba la pantalla casi
-       cien pixeles sin necesidad. */
+       y puede quedar debajo del pliegue. */
     var resto = 0;
     for (var c = 0; c < reproductor.children.length; c++){
       var hijo = reproductor.children[c];
@@ -768,21 +781,44 @@
         resto += hijo.offsetHeight;
       }
     }
-    var libre = window.innerHeight - reproductor.offsetTop - resto - 16;
-    /* El ancho se mide contra el MARCO, no contra el escenario: el escenario
-       ya viene encogido de la pasada anterior y usarlo encogeria un poco mas
-       en cada vuelta, hasta dejar la pantalla diminuta. */
-    var marco = reproductor.parentNode.clientWidth - 40;
-    var k = Math.min(1.5,
-                     marco / 880,
-                     Math.max(240, libre) / activa.offsetHeight);
-    lienzo.style.transform = "scale(" + k + ")";
-    escenario.style.height = Math.round(activa.offsetHeight * k) + "px";
-    /* El escenario se cine a la pantalla ya escalada, para que no queden
-       cientos de pixeles vacios a los lados. Esto NO realimenta el calculo
-       porque el ancho se mide contra el marco, y el subtitulo de abajo
-       conserva todo el ancho. */
-    escenario.style.maxWidth = Math.ceil(880 * k) + "px";
+    /* En el celular el reproductor se trae arriba al empezar, asi que el alto
+       libre se mide contra la ventana entera y no contra donde esta ahora. */
+    var marco = reproductor.clientWidth;
+    var celular = marco < 640;
+    var arriba = celular ? 0 : reproductor.offsetTop;
+    var libre = window.innerHeight - arriba - resto - 16;
+    var anchoP = 880, altoP = activa.offsetHeight;
+    var caja = celular ? cajaFoco(activa) : null;
+
+    if (!caja){
+      /* Pantalla completa: se escala desde la esquina y el escenario se cine
+         a lo escalado, centrado. Asi no queda corrida ni cortada. */
+      var k = Math.min(1.5, marco / anchoP, Math.max(240, libre) / altoP);
+      escenario.classList.remove("cerca");
+      lienzo.style.transform = "scale(" + k + ")";
+      escenario.style.maxWidth = Math.ceil(anchoP * k) + "px";
+      escenario.style.height = Math.round(altoP * k) + "px";
+      return;
+    }
+
+    /* Celular con zona resaltada: se acerca a esa zona para que se lea. */
+    var margen = 14;
+    var altoMax = Math.max(260, Math.min(libre, 420));
+    var kz = Math.min(1, (marco - 2 * margen) / caja.w, (altoMax - 2 * margen) / caja.h);
+    kz = Math.max(kz, marco / anchoP);
+    var alto = Math.min(altoP * kz, altoMax);
+    var tx = margen - caja.x * kz;
+    if (caja.w * kz < marco - 2 * margen){
+      tx = (marco - caja.w * kz) / 2 - caja.x * kz;
+    }
+    tx = Math.min(0, Math.max(marco - anchoP * kz, tx));
+    var ty = (alto - caja.h * kz) / 2 - caja.y * kz;
+    if (caja.h * kz > alto - 2 * margen) ty = margen - caja.y * kz;
+    ty = Math.min(0, Math.max(alto - altoP * kz, ty));
+    escenario.classList.add("cerca");
+    escenario.style.maxWidth = marco + "px";
+    escenario.style.height = Math.round(alto) + "px";
+    lienzo.style.transform = "translate(" + Math.round(tx) + "px," + Math.round(ty) + "px) scale(" + kz + ")";
   }
   window.addEventListener("resize", escalar);
 
@@ -890,6 +926,9 @@
 
   btPlay.addEventListener("click", function(){
     if (corriendo) { pausar(); return; }
+    if (escenario.parentNode.clientWidth < 640){
+      escenario.parentNode.scrollIntoView({behavior: "smooth", block: "start"});
+    }
     if (btPlay.textContent.indexOf("otra vez") > -1) i = 0;
     reproducir();
   });
